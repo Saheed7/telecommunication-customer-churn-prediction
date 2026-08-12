@@ -6,3 +6,7 @@ data/raw/
 data/processed/
 .env
 .DS_Store
+.gradio/
+WARNING*
+.gradio/
+WARNING*
