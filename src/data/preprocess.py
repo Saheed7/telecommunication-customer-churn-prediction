@@ -18,7 +18,7 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     df["TotalCharges"] = df["TotalCharges"].fillna(0)
 
     # 2. customerID is a unique identifier, not a predictive feature.
-    df = df.drop(columns=["customerID"])
+    df = df.drop(columns=["customerID"], errors="ignore")
 
     # 3. Target must be numeric for the model.
     df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
