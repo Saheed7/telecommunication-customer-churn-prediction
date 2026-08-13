@@ -60,7 +60,19 @@ def train():
     # 2. Handle class imbalance: tell XGBoost to weight churners more heavily.
     #    Computed from TRAIN ONLY so no test information leaks in.
     scale_pos_weight = (y_train == 0).sum() / (y_train == 1).sum()
-    params = {**PARAMS, "scale_pos_weight": scale_pos_weight}
+
+    # Use tuned hyperparameters if available, else fall back to defaults
+    best_params_path = Path("models/best_params.json")
+    if best_params_path.exists():
+        import json
+        with open(best_params_path) as f:
+            tuned = json.load(f)
+        params = {**PARAMS, **tuned, "scale_pos_weight": scale_pos_weight}
+        print(f"Using tuned hyperparameters from {best_params_path}")
+    else:
+        params = {**PARAMS, "scale_pos_weight": scale_pos_weight}
+        print("No tuned params found; using defaults.")
+
 
     # 3. Everything inside this block is recorded as ONE MLflow run
     setup_mlflow()
