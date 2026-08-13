@@ -23,11 +23,19 @@ jobs:
       - name: Run tests
         run: python -m pytest -v
 
-  docker-build:
+  docker-build-and-push:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
+
       - name: Build Docker image
         run: docker build -t telco-churn-app .
+
+      - name: Log in and push to Docker Hub
+        if: github.event_name == 'push'
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker tag telco-churn-app ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-app:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-app:latest
