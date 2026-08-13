@@ -1,0 +1,10 @@
+mlruns/
+__pycache__/
+*.pyc
+.git/
+.gradio/
+data/
+notebooks/
+.env
+requirements-lock.txt
+WARNING*
