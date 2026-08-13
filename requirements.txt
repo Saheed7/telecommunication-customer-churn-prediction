@@ -8,3 +8,4 @@ uvicorn
 gradio
 seaborn
 optuna
+pytest
