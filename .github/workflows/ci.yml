@@ -23,16 +23,14 @@ jobs:
       - name: Run tests
         run: python -m pytest -v
 
-docker-build-and-push:
+  docker-build-and-push:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
-
       - name: Build Docker image
         run: docker build -t telco-churn-app .
-
       - name: Log in and push to Docker Hub
         if: github.event_name == 'push'
         run: |
@@ -40,8 +38,7 @@ docker-build-and-push:
           docker tag telco-churn-app ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-app:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/telco-churn-app:latest
 
-
-deploy-to-lightsail:
+  deploy-to-lightsail:
     needs: docker-build-and-push
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -52,7 +49,6 @@ deploy-to-lightsail:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
       - name: Trigger Lightsail deployment
         run: |
           aws lightsail create-container-service-deployment \
